@@ -4,10 +4,12 @@
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -134,12 +136,37 @@
                         </AnchorPane>
                      </content>
                   </TitledPane>
-                  <TitledPane animated="false" text="Canny">
+                  <TitledPane animated="false" text="Ruído">
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <TextField fx:id="threshold" layoutX="19.0" layoutY="45.0" promptText="Threshold" />
-                              <Button layoutX="67.0" layoutY="90.0" mnemonicParsing="false" text="Canny" />
+                              <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="183.0">
+                                 <children>
+                                    <RadioButton fx:id="rdCruz" alignment="TOP_CENTER" mnemonicParsing="false" text="Cruz">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="radio" />
+                                       </toggleGroup>
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </RadioButton>
+                                    <RadioButton fx:id="rdX" mnemonicParsing="false" text="X" toggleGroup="$radio">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </RadioButton>
+                                    <RadioButton fx:id="rd3" mnemonicParsing="false" text="3x3" toggleGroup="$radio">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </RadioButton>
+                                    <Button mnemonicParsing="false" onAction="#processarRuido" text="Processar">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                              </VBox>
                            </children>
                         </AnchorPane>
                      </content>

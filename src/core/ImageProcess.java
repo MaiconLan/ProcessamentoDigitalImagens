@@ -5,26 +5,33 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import model.ActionGranulado;
+import model.ActionMedia;
+import model.Pixel;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class ImageProcess {
 
     public static Image processarMediaAritmetica(Image imagem) {
-        return processarImagem(imagem, Action.MEDIA_ARITMETICA, null, null, null, null);
+        return processarImagem(imagem, ActionMedia.MEDIA_ARITMETICA, null, null, null, null);
     }
 
     public static Image processarMediaPonderada(Image imagem, Double r, Double g, Double b) {
-        return processarImagem(imagem, Action.MEDIA_PONDERADA, null, r, g, b);
+        return processarImagem(imagem, ActionMedia.MEDIA_PONDERADA, null, r, g, b);
     }
 
     public static Image processarNegativo(Image imagem) {
-        return processarImagem(imagem, Action.NEGATIVO, null, null, null, null);
+        return processarImagem(imagem, ActionMedia.NEGATIVO, null, null, null, null);
     }
 
     public static Image processarLimiar(Image imagem, Double valor) {
-        return processarImagem(imagem, Action.LIMIAR, valor, null, null, null);
+        return processarImagem(imagem, ActionMedia.LIMIAR, valor, null, null, null);
     }
 
-    private static Image processarImagem(Image imagem, Action action, Double value,  Double r, Double g, Double b){
+    private static Image processarImagem(Image imagem, ActionMedia actionMedia, Double value, Double r, Double g, Double b){
         try {
             int w = (int) imagem.getWidth();
             int h = (int) imagem.getHeight();
@@ -33,7 +40,7 @@ public class ImageProcess {
             WritableImage wi = new WritableImage(w, h);
             PixelWriter pw = wi.getPixelWriter();
 
-            switch (action) {
+            switch (actionMedia) {
                 case NEGATIVO:
                     negativo(w, h, pr, pw);
                     break;
@@ -69,8 +76,6 @@ public class ImageProcess {
                 double blue = 1 - corA.getBlue();
 
                 Color novaCor = new Color(red, green, blue, corA.getOpacity());
-
-
                 pw.setColor(i, j, novaCor);
             }
         }
@@ -86,7 +91,7 @@ public class ImageProcess {
                 double media = (corA.getRed() + corA.getGreen() + corA.getBlue()) / 3;
 
                 Color novaCor = null;
-                if(media > (limiar/100))
+                if(media > (limiar/255))
                     novaCor = Color.WHITE;
                 else
                     novaCor = Color.BLACK;
@@ -159,5 +164,104 @@ public class ImageProcess {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static Image granularizacao(Image imagem, ActionGranulado acao){
+        int w = (int) imagem.getWidth();
+        int h = (int) imagem.getHeight();
+
+        PixelReader pr = imagem.getPixelReader();
+        WritableImage wi = new WritableImage(w, h);
+        PixelWriter pw = wi.getPixelWriter();
+
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                Color corAtual = pr.getColor(i, j);
+
+                List<Pixel> vizinhanca = new ArrayList<>();
+
+                switch (acao) {
+                    case VIZINHO_X:
+                        vizinhanca = vizinhanca_x(pr, i, j);
+                        break;
+
+                    case VIZINHO_C:
+                        vizinhanca = vizinhanca_c(pr, i, j);
+                        break;
+
+                    case VIZINHO_3:
+                        vizinhanca = vizinhanca_x(pr, i, j);
+                        vizinhanca.addAll(vizinhanca_c(pr, i, j));
+                        break;
+                }
+
+                Color novaCor = new Color(medianaR(vizinhanca), medianaG(vizinhanca), medianaB(vizinhanca), corAtual.getOpacity());
+                pw.setColor(i, j, novaCor);
+            }
+        }
+
+        return wi;
+    }
+
+    private static List<Pixel> vizinhanca_x(PixelReader pr, int x, int y) {
+        List<Pixel> vizinhanca = new ArrayList<>();
+
+        Color cor1 = getColor(pr, x-1, y-1);
+        Color cor2 = getColor(pr,x-1, y+1);
+        Color cor3 = getColor(pr, x+1, y-1);
+        Color cor4 = getColor(pr, x+1, y+1);
+
+        vizinhanca.add(new Pixel(cor1 != null ? cor1.getRed() : null, cor1 != null ? cor1.getGreen() : null, cor1 != null ? cor1.getBlue() : null,x-1, y-1));
+        vizinhanca.add(new Pixel(cor2 != null ? cor2.getRed() : null, cor2 != null ? cor2.getGreen() : null, cor2 != null ? cor2.getBlue() : null,x-1, y+1));
+        vizinhanca.add(new Pixel(cor3 != null ? cor3.getRed() : null, cor3 != null ? cor3.getGreen() : null, cor3 != null ? cor3.getBlue() : null,x+1, y-1));
+        vizinhanca.add(new Pixel(cor4 != null ? cor4.getRed() : null, cor4 != null ? cor4.getGreen() : null, cor4 != null ? cor4.getBlue() : null,x+1, y+1));
+
+        return vizinhanca;
+    }
+
+    private static List<Pixel> vizinhanca_c(PixelReader pr, int x, int y) {
+        List<Pixel> vizinhanca = new ArrayList<>();
+
+        Color cor1 = getColor(pr, x, y-1);
+        Color cor2 = getColor(pr, x, y+1);
+        Color cor3 = getColor(pr, x-1, y);
+        Color cor4 = getColor(pr, x+1, y);
+
+        vizinhanca.add(new Pixel(cor1 != null ? cor1.getRed() : null, cor1 != null ? cor1.getGreen() : null, cor1 != null ? cor1.getBlue() : null, x, y-1));
+        vizinhanca.add(new Pixel(cor2 != null ? cor2.getRed() : null, cor2 != null ? cor2.getGreen() : null, cor2 != null ? cor2.getBlue() : null, x, y+1));
+        vizinhanca.add(new Pixel(cor3 != null ? cor3.getRed() : null, cor3 != null ? cor3.getGreen() : null, cor3 != null ? cor3.getBlue() : null, x-1, y));
+        vizinhanca.add(new Pixel(cor4 != null ? cor4.getRed() : null, cor4 != null ? cor4.getGreen() : null, cor4 != null ? cor4.getBlue() : null, x+1, y));
+
+        return vizinhanca;
+    }
+
+    private static Color getColor(PixelReader px, int x, int y){
+        try {
+            return px.getColor(x, y);
+
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
+    }
+
+    private static Double medianaR(List<Pixel> pixelList){
+        List<Double> cor = new ArrayList<>();
+        pixelList.stream().filter(pixel -> pixel.getR() != null).forEach(pixel -> cor.add(pixel.getR()));
+        Collections.sort(cor);
+        return cor.get(cor.size() / 2);
+    }
+
+    private static Double medianaG(List<Pixel> pixelList){
+        List<Double> cor = new ArrayList<>();
+        pixelList.stream().filter(pixel -> pixel.getG() != null).forEach(pixel -> cor.add(pixel.getG()));
+        Collections.sort(cor);
+        return cor.get(cor.size() / 2);
+    }
+
+    private static Double medianaB(List<Pixel> pixelList){
+        List<Double> cor = new ArrayList<>();
+        pixelList.stream().filter(pixel -> pixel.getB() != null).forEach(pixel -> cor.add(pixel.getB()));
+        Collections.sort(cor);
+        return cor.get(cor.size() / 2);
     }
 }

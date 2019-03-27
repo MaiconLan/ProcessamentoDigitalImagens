@@ -1,27 +1,21 @@
 package controller;
 
-import core.Action;
 import core.ImageProcess;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
+import model.ActionGranulado;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -63,11 +57,38 @@ public class Controller {
     @FXML
     private Slider slider;
 
+    @FXML
+    private RadioButton rdCruz;
+
+    @FXML
+    private RadioButton rdX;
+
+    @FXML
+    private RadioButton rd3;
+
+
     private Image image1, image2, image3;
 
     private File f;
 
     private boolean verificarRGB = true;
+
+    @FXML
+    void processarRuido() {
+        if(rdCruz.isSelected()){
+            image3 = ImageProcess.granularizacao(image1, ActionGranulado.VIZINHO_C);
+
+        } else if(rdX.isSelected()) {
+            image3 = ImageProcess.granularizacao(image1, ActionGranulado.VIZINHO_X);
+
+        } else if(rd3.isSelected()){
+            image3 = ImageProcess.granularizacao(image1, ActionGranulado.VIZINHO_3);
+
+        }
+
+        atualizaImage3(image3);
+
+    }
 
     @FXML
     public void desafio1(){
