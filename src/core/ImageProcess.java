@@ -1,5 +1,9 @@
 package core;
 
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
@@ -55,7 +59,6 @@ public class ImageProcess {
                     break;
             }
 
-
             return wi;
         } catch (Exception e) {
             e.printStackTrace();
@@ -80,6 +83,7 @@ public class ImageProcess {
             }
         }
     }
+
     private static void limiar(int w, int h, PixelReader pr, PixelWriter pw, double limiar){
         limiar(0, 0, w, h, pr, pw, limiar);
     }
@@ -146,6 +150,35 @@ public class ImageProcess {
     }
 
     public static Image desafio1(Image imagem) {
+        int w = (int) imagem.getWidth();
+        int h = (int) imagem.getHeight();
+        PixelReader pr = imagem.getPixelReader();
+        WritableImage wi = new WritableImage(w, h);
+        PixelWriter pw = wi.getPixelWriter();
+        double[] limiar = new double[] { 0.33, 0.66 };
+
+        for (int i = 1; i < w; i++) {
+            for (int j = 1; j < h; j++) {
+
+                Color oldCor = pr.getColor(i, j);
+                Color newCor = null;
+                if (oldCor.getRed() < limiar[0]) {
+                    newCor = new Color(0.3, 0.5, 0.9, 1);
+                } else {
+                    if (oldCor.getRed() > limiar[0] && oldCor.getRed() < limiar[1]) {
+                        newCor = new Color(0, 1, 0.5, 1);
+                    } else {
+                        newCor = new Color(1, 0, 1, 1);
+                    }
+                }
+                pw.setColor(i, j, newCor);
+            }
+        }
+        // return ruido(wi, 2, 3);
+        return wi;
+    }
+
+    public static Image desafio2(Image imagem) {
         try {
             int w = (int) imagem.getWidth();
             int h = (int) imagem.getHeight();
@@ -174,8 +207,8 @@ public class ImageProcess {
         WritableImage wi = new WritableImage(w, h);
         PixelWriter pw = wi.getPixelWriter();
 
-        for (int i = 0; i < w; i++) {
-            for (int j = 0; j < h; j++) {
+        for (int i = 0; i < h; i++) {
+            for (int j = 0; j < w; j++) {
                 Color corAtual = pr.getColor(i, j);
 
                 List<Pixel> vizinhanca = new ArrayList<>();
@@ -263,5 +296,145 @@ public class ImageProcess {
         pixelList.stream().filter(pixel -> pixel.getB() != null).forEach(pixel -> cor.add(pixel.getB()));
         Collections.sort(cor);
         return cor.get(cor.size() / 2);
+    }
+
+    public static Image adicaoSubtracao(Image imagem1, Image imagem2, double percentual1, ActionMedia acao){
+        int w1 = (int) imagem1.getWidth();
+        int h1 = (int) imagem1.getHeight();
+        int w2 = (int) imagem2.getWidth();
+        int h2 = (int) imagem2.getHeight();
+
+        int minW = Math.min(w1, w2);
+        int minH = Math.min(h1, h2);
+
+        PixelReader pr1 = imagem1.getPixelReader();
+        PixelReader pr2 = imagem2.getPixelReader();
+
+        WritableImage wi = new WritableImage(minW, minH);
+        PixelWriter pw = wi.getPixelWriter();
+
+        switch (acao) {
+            case ADICAO:
+                adicao(minW, minH, pr1, pr2, percentual1, pw);
+                break;
+            case SUBTRACAO:
+                subtracao(minW, minH, pr1, pr2, pw);
+                break;
+                default:
+                    break;
+        }
+
+        return wi;
+    }
+
+    private static void adicao(int minW, int minH, PixelReader pr1, PixelReader pr2, double percentual1, PixelWriter pw){
+        for (int i = 0; i < minW; i++) {
+            for (int j = 0; j < minH; j++) {
+                Color cor1 = pr1.getColor(i, j);
+                Color cor2 = pr2.getColor(i, j);
+
+                double percentual2 = 100 - percentual1;
+
+                double r = (cor1.getRed() * (percentual1/100)) + (cor2.getRed() * (percentual2/100));
+                double g = (cor1.getGreen() * (percentual1/100)) + (cor2.getGreen() * (percentual2/100));
+                double b = (cor1.getBlue() * (percentual1/100)) + (cor2.getBlue() * (percentual2/100));
+
+                pw.setColor(i, j, new Color(r, g, b, (cor1.getOpacity() * (percentual1/100)) + (cor2.getOpacity() * (percentual2 / 100))));
+            }
+        }
+    }
+
+    private static void subtracao(int minW, int minH, PixelReader pr1, PixelReader pr2, PixelWriter pw) {
+        for (int i = 0; i < minW; i++) {
+            for (int j = 0; j < minH; j++) {
+                Color cor1 = pr1.getColor(i, j);
+                Color cor2 = pr2.getColor(i, j);
+
+                double r = cor1.getRed() - cor2.getRed();
+                double g = cor1.getGreen() - cor2.getGreen();
+                double b = cor1.getBlue() - cor2.getBlue();
+
+                pw.setColor(i, j, new Color(zerar(r), zerar(g), zerar(b), 1));
+            }
+        }
+    }
+
+    private static int minValue(int i, int j){
+        if(i < j)
+            return i;
+        else
+            return j;
+    }
+
+    private static double zerar(double x){
+        return x > 0 ? x : 0;
+    }
+
+    public static void getGrafico(Image imagem, BarChart<String, Number> grafico) {
+        int[] histograma = histograma(imagem);
+
+        XYChart.Series vlr = new XYChart.Series();
+        for (int i = 0; i < histograma.length; i++) {
+            vlr.getData().add(new XYChart.Data(i + "", histograma[i]));
+        }
+        grafico.getData().addAll(vlr);
+    }
+
+    private static int[] histograma(Image imagem) {
+        int[] histograma = new int[256];
+        int w = (int) imagem.getWidth();
+        int h = (int) imagem.getHeight();
+        PixelReader pr = imagem.getPixelReader();
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                histograma[(int) (pr.getColor(i, j).getRed() * 255)]++;
+                histograma[(int) (pr.getColor(i, j).getBlue() * 255)]++;
+                histograma[(int) (pr.getColor(i, j).getGreen() * 255)]++;
+            }
+        }
+        return histograma;
+    }
+
+    public static int[] histograma(Image imagem, int canal) {
+        int[] histograma = new int[256];
+        PixelReader pr = imagem.getPixelReader();
+        int w = (int) imagem.getWidth();
+        int h = (int) imagem.getHeight();
+
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+
+                if (canal == 1)
+                    histograma[(int) (pr.getColor(i, j).getRed() * 255)]++;
+                else if (canal == 2)
+                    histograma[(int) (pr.getColor(i, j).getGreen() * 255)]++;
+                else
+                    histograma[(int) (pr.getColor(i, j).getBlue() * 255)]++;
+            }
+        }
+        return histograma;
+    }
+
+    public static Image prova1(Image imagem, int distancia) {
+        int w = (int) imagem.getWidth();
+        int h = (int) imagem.getHeight();
+        PixelReader pr = imagem.getPixelReader();
+        WritableImage wi = new WritableImage(w, h);
+        PixelWriter pw = wi.getPixelWriter();
+
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                Color atual = pr.getColor(i, j);
+                Color nova = Color.RED;
+
+                if(i % distancia == 0) {
+                    pw.setColor(i, j, nova);
+                }  else {
+                    pw.setColor(i, j, atual);
+                }
+            }
+        }
+
+        return wi;
     }
 }

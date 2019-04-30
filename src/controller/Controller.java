@@ -4,6 +4,8 @@ import core.ImageProcess;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -12,10 +14,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.ActionGranulado;
+import model.ActionMedia;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -49,6 +55,9 @@ public class Controller {
     private TextField rPercentual;
 
     @FXML
+    private TextField distancia;
+
+    @FXML
     private TextField gPercentual;
 
     @FXML
@@ -66,12 +75,55 @@ public class Controller {
     @FXML
     private RadioButton rd3;
 
+    @FXML
+    private Slider sliderPercentual;
 
     private Image image1, image2, image3;
 
     private File f;
 
     private boolean verificarRGB = true;
+
+
+    @FXML
+    public void histograma() throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/view/histograma.fxml"));
+        BorderPane page = loader.load();
+        Stage dialogStage = new Stage();
+        dialogStage.setTitle("Histograma");
+        //dialogStage.initModality(Modality.APPLICATION_MODAL);
+        dialogStage.initOwner(Main.stage);
+        dialogStage.initStyle(StageStyle.UTILITY);
+
+        Scene scene = new Scene(page);
+        dialogStage.setScene(scene);
+        HistogramaController controller = loader.getController();
+        controller.setDialogStage(dialogStage);
+        dialogStage.show();
+        if(image1 != null) {
+            ImageProcess.getGrafico(image1, controller.getGrafico1());
+        }
+        if(image2 != null) {
+            ImageProcess.getGrafico(image2, controller.getGrafico2());
+        }
+        if(image3 != null) {
+            ImageProcess.getGrafico(image3, controller.getGrafico3());
+        }
+    }
+
+
+    @FXML
+    public void subtracao() {
+        image3 = ImageProcess.adicaoSubtracao(image1, image2, sliderPercentual.getValue(), ActionMedia.SUBTRACAO);
+        atualizaImage3(image3);
+    }
+
+    @FXML
+    public void adicao() {
+        image3 = ImageProcess.adicaoSubtracao(image1, image2, sliderPercentual.getValue(), ActionMedia.ADICAO);
+        atualizaImage3(image3);
+    }
 
     @FXML
     void processarRuido() {
@@ -91,8 +143,21 @@ public class Controller {
     }
 
     @FXML
+    public void prova1(){
+        image3 = ImageProcess.prova1(image1, Integer.valueOf(distancia.getText()));
+        atualizaImage3(image3);
+    }
+
+
+    @FXML
     public void desafio1(){
         image3 = ImageProcess.desafio1(image1);
+        atualizaImage3(image3);
+    }
+
+    @FXML
+    public void desafio2(){
+        image3 = ImageProcess.desafio2(image1);
         atualizaImage3(image3);
     }
 
@@ -226,11 +291,11 @@ public class Controller {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new
                 FileChooser.ExtensionFilter(
-                "Imagens", "*.jpg", "*.JPG",
+                "Imagens", "*.jpg", "*.JPG", "*.JPEG", "*.jpeg",
                 "*.png", "*.PNG", "*.gif", "*.GIF",
                 "*.bmp", "*.BMP"));
         fileChooser.setInitialDirectory(new File(
-                "D:\\PDI"));
+                "C:\\Users\\maico\\Desktop"));
         File imgSelec = fileChooser.showOpenDialog(null);
 
         try {

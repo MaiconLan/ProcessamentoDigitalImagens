@@ -13,8 +13,9 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         BorderPane root = FXMLLoader.load(getClass().getResource("../view/sample.fxml"));
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+        stage = primaryStage;
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
 
