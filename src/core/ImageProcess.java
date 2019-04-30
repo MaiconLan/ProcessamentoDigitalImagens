@@ -155,26 +155,26 @@ public class ImageProcess {
         PixelReader pr = imagem.getPixelReader();
         WritableImage wi = new WritableImage(w, h);
         PixelWriter pw = wi.getPixelWriter();
-        double[] limiar = new double[] { 0.33, 0.66 };
+        double limite1 = 0.33;
+        double limite2 = 0.66;
 
         for (int i = 1; i < w; i++) {
             for (int j = 1; j < h; j++) {
 
-                Color oldCor = pr.getColor(i, j);
-                Color newCor = null;
-                if (oldCor.getRed() < limiar[0]) {
-                    newCor = new Color(0.3, 0.5, 0.9, 1);
+                Color corAtual = pr.getColor(i, j);
+                Color novaCor = null;
+                if (corAtual.getRed() < limite1) {
+                    novaCor = new Color(0.3, 0.5, 0.9, 1);
                 } else {
-                    if (oldCor.getRed() > limiar[0] && oldCor.getRed() < limiar[1]) {
-                        newCor = new Color(0, 1, 0.5, 1);
+                    if (corAtual.getRed() > limite1 && corAtual.getRed() < limite2) {
+                        novaCor = new Color(0, 1, 0.5, 1);
                     } else {
-                        newCor = new Color(1, 0, 1, 1);
+                        novaCor = new Color(1, 0, 1, 1);
                     }
                 }
-                pw.setColor(i, j, newCor);
+                pw.setColor(i, j, novaCor);
             }
         }
-        // return ruido(wi, 2, 3);
         return wi;
     }
 
