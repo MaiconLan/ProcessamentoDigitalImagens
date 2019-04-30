@@ -35,7 +35,7 @@ public class ImageProcess {
         return processarImagem(imagem, ActionMedia.LIMIAR, valor, null, null, null);
     }
 
-    private static Image processarImagem(Image imagem, ActionMedia actionMedia, Double value, Double r, Double g, Double b){
+    private static Image processarImagem(Image imagem, ActionMedia actionMedia, Double value, Double r, Double g, Double b) {
         try {
             int w = (int) imagem.getWidth();
             int h = (int) imagem.getHeight();
@@ -66,7 +66,7 @@ public class ImageProcess {
         }
     }
 
-    private static void negativo(int w, int h, PixelReader pr, PixelWriter pw){
+    private static void negativo(int w, int h, PixelReader pr, PixelWriter pw) {
         negativo(0, 0, w, h, pr, pw);
     }
 
@@ -84,18 +84,18 @@ public class ImageProcess {
         }
     }
 
-    private static void limiar(int w, int h, PixelReader pr, PixelWriter pw, double limiar){
+    private static void limiar(int w, int h, PixelReader pr, PixelWriter pw, double limiar) {
         limiar(0, 0, w, h, pr, pw, limiar);
     }
 
-    private static void limiar(int inicioW, int inicioH, int w, int h, PixelReader pr, PixelWriter pw, double limiar){
+    private static void limiar(int inicioW, int inicioH, int w, int h, PixelReader pr, PixelWriter pw, double limiar) {
         for (int i = inicioW; i < w; i++) {
             for (int j = inicioH; j < h; j++) {
                 Color corA = pr.getColor(i, j);
                 double media = (corA.getRed() + corA.getGreen() + corA.getBlue()) / 3;
 
                 Color novaCor = null;
-                if(media > (limiar/255))
+                if (media > (limiar / 255))
                     novaCor = Color.WHITE;
                 else
                     novaCor = Color.BLACK;
@@ -105,11 +105,11 @@ public class ImageProcess {
         }
     }
 
-    private static void aritmetica(int w, int h, PixelReader pr, PixelWriter pw){
+    private static void aritmetica(int w, int h, PixelReader pr, PixelWriter pw) {
         aritmetica(0, 0, w, h, pr, pw);
     }
 
-    private static void aritmetica(int inicioW, int inicioH, int w, int h, PixelReader pr, PixelWriter pw){
+    private static void aritmetica(int inicioW, int inicioH, int w, int h, PixelReader pr, PixelWriter pw) {
         for (int i = inicioW; i < w; i++) {
             for (int j = inicioH; j < h; j++) {
                 Color corA = pr.getColor(i, j);
@@ -120,27 +120,27 @@ public class ImageProcess {
         }
     }
 
-    private static void ponderada(int w, int h, PixelReader pr, PixelWriter pw, double r, double g, double b){
+    private static void ponderada(int w, int h, PixelReader pr, PixelWriter pw, double r, double g, double b) {
         ponderada(0, 0, w, h, pr, pw, r, g, b);
     }
 
-    private static void ponderada(int inicioW, int inicioH, int w, int h, PixelReader pr, PixelWriter pw, double r, double g, double b){
+    private static void ponderada(int inicioW, int inicioH, int w, int h, PixelReader pr, PixelWriter pw, double r, double g, double b) {
         for (int i = inicioW; i < w; i++) {
             for (int j = inicioH; j < h; j++) {
                 Color corA = pr.getColor(i, j);
                 double media = 0;
 
-                if(r == 0 && g == 0 && b == 0)
+                if (r == 0 && g == 0 && b == 0)
                     media = (corA.getRed() + corA.getGreen() + corA.getBlue()) / 3;
                 else
-                    media = ((corA.getRed() * r) / 100 + (corA.getGreen() * g) / 100 + (corA.getBlue() * b)/ 100 );
+                    media = ((corA.getRed() * r) / 100 + (corA.getGreen() * g) / 100 + (corA.getBlue() * b) / 100);
                 Color corN = new Color(media, media, media, corA.getOpacity());
                 pw.setColor(i, j, corN);
             }
         }
     }
 
-    private static void manter(int inicioW, int inicioH, int w, int h, PixelReader pr, PixelWriter pw){
+    private static void manter(int inicioW, int inicioH, int w, int h, PixelReader pr, PixelWriter pw) {
         for (int i = inicioW; i < w; i++) {
             for (int j = inicioH; j < h; j++) {
                 Color corA = pr.getColor(i, j);
@@ -163,15 +163,15 @@ public class ImageProcess {
 
                 Color corAtual = pr.getColor(i, j);
                 Color novaCor = null;
-                if (corAtual.getRed() < limite1) {
+                if (corAtual.getRed() < limite1)
                     novaCor = new Color(0.3, 0.5, 0.9, 1);
-                } else {
-                    if (corAtual.getRed() > limite1 && corAtual.getRed() < limite2) {
-                        novaCor = new Color(0, 1, 0.5, 1);
-                    } else {
-                        novaCor = new Color(1, 0, 1, 1);
-                    }
-                }
+
+                else if (corAtual.getRed() > limite1 && corAtual.getRed() < limite2)
+                    novaCor = new Color(0, 1, 0.5, 1);
+
+                else
+                    novaCor = new Color(1, 0, 1, 1);
+
                 pw.setColor(i, j, novaCor);
             }
         }
@@ -187,10 +187,10 @@ public class ImageProcess {
             WritableImage wi = new WritableImage(w, h);
             PixelWriter pw = wi.getPixelWriter();
 
-            manter(0,0, (w*1/4),h, pr, pw);
-            aritmetica((w*1/4),0, (w*2/4),h, pr, pw);
-            limiar((w*2/4),0, (w*3/4),h, pr, pw, 50);
-            negativo((w*3/4),0, w,h, pr, pw);
+            manter(0, 0, (w * 1 / 4), h, pr, pw);
+            aritmetica((w * 1 / 4), 0, (w * 2 / 4), h, pr, pw);
+            limiar((w * 2 / 4), 0, (w * 3 / 4), h, pr, pw, 50);
+            negativo((w * 3 / 4), 0, w, h, pr, pw);
 
             return wi;
         } catch (Exception e) {
@@ -199,7 +199,7 @@ public class ImageProcess {
         }
     }
 
-    public static Image granularizacao(Image imagem, ActionGranulado acao){
+    public static Image granularizacao(Image imagem, ActionGranulado acao) {
         int w = (int) imagem.getWidth();
         int h = (int) imagem.getHeight();
 
@@ -239,15 +239,15 @@ public class ImageProcess {
     private static List<Pixel> vizinhanca_x(PixelReader pr, int x, int y) {
         List<Pixel> vizinhanca = new ArrayList<>();
 
-        Color cor1 = getColor(pr, x-1, y-1);
-        Color cor2 = getColor(pr,x-1, y+1);
-        Color cor3 = getColor(pr, x+1, y-1);
-        Color cor4 = getColor(pr, x+1, y+1);
+        Color cor1 = getColor(pr, x - 1, y - 1);
+        Color cor2 = getColor(pr, x - 1, y + 1);
+        Color cor3 = getColor(pr, x + 1, y - 1);
+        Color cor4 = getColor(pr, x + 1, y + 1);
 
-        vizinhanca.add(new Pixel(cor1 != null ? cor1.getRed() : null, cor1 != null ? cor1.getGreen() : null, cor1 != null ? cor1.getBlue() : null,x-1, y-1));
-        vizinhanca.add(new Pixel(cor2 != null ? cor2.getRed() : null, cor2 != null ? cor2.getGreen() : null, cor2 != null ? cor2.getBlue() : null,x-1, y+1));
-        vizinhanca.add(new Pixel(cor3 != null ? cor3.getRed() : null, cor3 != null ? cor3.getGreen() : null, cor3 != null ? cor3.getBlue() : null,x+1, y-1));
-        vizinhanca.add(new Pixel(cor4 != null ? cor4.getRed() : null, cor4 != null ? cor4.getGreen() : null, cor4 != null ? cor4.getBlue() : null,x+1, y+1));
+        vizinhanca.add(new Pixel(cor1 != null ? cor1.getRed() : null, cor1 != null ? cor1.getGreen() : null, cor1 != null ? cor1.getBlue() : null, x - 1, y - 1));
+        vizinhanca.add(new Pixel(cor2 != null ? cor2.getRed() : null, cor2 != null ? cor2.getGreen() : null, cor2 != null ? cor2.getBlue() : null, x - 1, y + 1));
+        vizinhanca.add(new Pixel(cor3 != null ? cor3.getRed() : null, cor3 != null ? cor3.getGreen() : null, cor3 != null ? cor3.getBlue() : null, x + 1, y - 1));
+        vizinhanca.add(new Pixel(cor4 != null ? cor4.getRed() : null, cor4 != null ? cor4.getGreen() : null, cor4 != null ? cor4.getBlue() : null, x + 1, y + 1));
 
         return vizinhanca;
     }
@@ -255,20 +255,20 @@ public class ImageProcess {
     private static List<Pixel> vizinhanca_c(PixelReader pr, int x, int y) {
         List<Pixel> vizinhanca = new ArrayList<>();
 
-        Color cor1 = getColor(pr, x, y-1);
-        Color cor2 = getColor(pr, x, y+1);
-        Color cor3 = getColor(pr, x-1, y);
-        Color cor4 = getColor(pr, x+1, y);
+        Color cor1 = getColor(pr, x, y - 1);
+        Color cor2 = getColor(pr, x, y + 1);
+        Color cor3 = getColor(pr, x - 1, y);
+        Color cor4 = getColor(pr, x + 1, y);
 
-        vizinhanca.add(new Pixel(cor1 != null ? cor1.getRed() : null, cor1 != null ? cor1.getGreen() : null, cor1 != null ? cor1.getBlue() : null, x, y-1));
-        vizinhanca.add(new Pixel(cor2 != null ? cor2.getRed() : null, cor2 != null ? cor2.getGreen() : null, cor2 != null ? cor2.getBlue() : null, x, y+1));
-        vizinhanca.add(new Pixel(cor3 != null ? cor3.getRed() : null, cor3 != null ? cor3.getGreen() : null, cor3 != null ? cor3.getBlue() : null, x-1, y));
-        vizinhanca.add(new Pixel(cor4 != null ? cor4.getRed() : null, cor4 != null ? cor4.getGreen() : null, cor4 != null ? cor4.getBlue() : null, x+1, y));
+        vizinhanca.add(new Pixel(cor1 != null ? cor1.getRed() : null, cor1 != null ? cor1.getGreen() : null, cor1 != null ? cor1.getBlue() : null, x, y - 1));
+        vizinhanca.add(new Pixel(cor2 != null ? cor2.getRed() : null, cor2 != null ? cor2.getGreen() : null, cor2 != null ? cor2.getBlue() : null, x, y + 1));
+        vizinhanca.add(new Pixel(cor3 != null ? cor3.getRed() : null, cor3 != null ? cor3.getGreen() : null, cor3 != null ? cor3.getBlue() : null, x - 1, y));
+        vizinhanca.add(new Pixel(cor4 != null ? cor4.getRed() : null, cor4 != null ? cor4.getGreen() : null, cor4 != null ? cor4.getBlue() : null, x + 1, y));
 
         return vizinhanca;
     }
 
-    private static Color getColor(PixelReader px, int x, int y){
+    private static Color getColor(PixelReader px, int x, int y) {
         try {
             return px.getColor(x, y);
 
@@ -277,28 +277,28 @@ public class ImageProcess {
         }
     }
 
-    private static Double medianaR(List<Pixel> pixelList){
+    private static Double medianaR(List<Pixel> pixelList) {
         List<Double> cor = new ArrayList<>();
         pixelList.stream().filter(pixel -> pixel.getR() != null).forEach(pixel -> cor.add(pixel.getR()));
         Collections.sort(cor);
         return cor.get(cor.size() / 2);
     }
 
-    private static Double medianaG(List<Pixel> pixelList){
+    private static Double medianaG(List<Pixel> pixelList) {
         List<Double> cor = new ArrayList<>();
         pixelList.stream().filter(pixel -> pixel.getG() != null).forEach(pixel -> cor.add(pixel.getG()));
         Collections.sort(cor);
         return cor.get(cor.size() / 2);
     }
 
-    private static Double medianaB(List<Pixel> pixelList){
+    private static Double medianaB(List<Pixel> pixelList) {
         List<Double> cor = new ArrayList<>();
         pixelList.stream().filter(pixel -> pixel.getB() != null).forEach(pixel -> cor.add(pixel.getB()));
         Collections.sort(cor);
         return cor.get(cor.size() / 2);
     }
 
-    public static Image adicaoSubtracao(Image imagem1, Image imagem2, double percentual1, ActionMedia acao){
+    public static Image adicaoSubtracao(Image imagem1, Image imagem2, double percentual1, ActionMedia acao) {
         int w1 = (int) imagem1.getWidth();
         int h1 = (int) imagem1.getHeight();
         int w2 = (int) imagem2.getWidth();
@@ -320,14 +320,14 @@ public class ImageProcess {
             case SUBTRACAO:
                 subtracao(minW, minH, pr1, pr2, pw);
                 break;
-                default:
-                    break;
+            default:
+                break;
         }
 
         return wi;
     }
 
-    private static void adicao(int minW, int minH, PixelReader pr1, PixelReader pr2, double percentual1, PixelWriter pw){
+    private static void adicao(int minW, int minH, PixelReader pr1, PixelReader pr2, double percentual1, PixelWriter pw) {
         for (int i = 0; i < minW; i++) {
             for (int j = 0; j < minH; j++) {
                 Color cor1 = pr1.getColor(i, j);
@@ -335,11 +335,11 @@ public class ImageProcess {
 
                 double percentual2 = 100 - percentual1;
 
-                double r = (cor1.getRed() * (percentual1/100)) + (cor2.getRed() * (percentual2/100));
-                double g = (cor1.getGreen() * (percentual1/100)) + (cor2.getGreen() * (percentual2/100));
-                double b = (cor1.getBlue() * (percentual1/100)) + (cor2.getBlue() * (percentual2/100));
+                double r = (cor1.getRed() * (percentual1 / 100)) + (cor2.getRed() * (percentual2 / 100));
+                double g = (cor1.getGreen() * (percentual1 / 100)) + (cor2.getGreen() * (percentual2 / 100));
+                double b = (cor1.getBlue() * (percentual1 / 100)) + (cor2.getBlue() * (percentual2 / 100));
 
-                pw.setColor(i, j, new Color(r, g, b, (cor1.getOpacity() * (percentual1/100)) + (cor2.getOpacity() * (percentual2 / 100))));
+                pw.setColor(i, j, new Color(r, g, b, (cor1.getOpacity() * (percentual1 / 100)) + (cor2.getOpacity() * (percentual2 / 100))));
             }
         }
     }
@@ -359,14 +359,14 @@ public class ImageProcess {
         }
     }
 
-    private static int minValue(int i, int j){
-        if(i < j)
+    private static int minValue(int i, int j) {
+        if (i < j)
             return i;
         else
             return j;
     }
 
-    private static double zerar(double x){
+    private static double zerar(double x) {
         return x > 0 ? x : 0;
     }
 
@@ -427,9 +427,9 @@ public class ImageProcess {
                 Color atual = pr.getColor(i, j);
                 Color nova = Color.RED;
 
-                if(i % distancia == 0) {
+                if (i % distancia == 0) {
                     pw.setColor(i, j, nova);
-                }  else {
+                } else {
                     pw.setColor(i, j, atual);
                 }
             }
