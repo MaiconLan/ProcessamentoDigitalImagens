@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
@@ -190,8 +191,25 @@
                            <children>
                               <Button layoutX="65.0" layoutY="20.0" mnemonicParsing="false" onAction="#desafio1" text="Desafio 1" />
                               <Button layoutX="65.0" layoutY="52.0" mnemonicParsing="false" onAction="#desafio2" text="Desafio 2" />
-                              <Button layoutX="70.0" layoutY="140.0" mnemonicParsing="false" onAction="#prova1" text="Prova 1" />
-                              <TextField fx:id="distancia" layoutX="17.0" layoutY="115.0" />
+                              <Button layoutX="54.0" layoutY="109.0" mnemonicParsing="false" onAction="#atividade1" text="Atividade 1" />
+                              <TextField fx:id="distancia" layoutX="17.0" layoutY="134.0" />
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </TitledPane>
+                  <TitledPane animated="false" text="Prova 1">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="357.0" prefWidth="182.0">
+                           <children>
+                              <Button layoutX="56.0" layoutY="130.0" mnemonicParsing="false" onAction="#prova1Questao1" text="Questao 1" />
+                              <Button layoutX="56.0" layoutY="224.0" mnemonicParsing="false" onAction="#prova1Questao2" text="Questao 2" />
+                              <Button layoutX="57.0" layoutY="277.0" mnemonicParsing="false" onAction="#prova1Questao3" text="Questao 3" />
+                              <TextField fx:id="colunas" layoutX="17.0" layoutY="166.0" promptText="Colunas" />
+                              <Separator layoutX="-9.0" layoutY="215.0" prefWidth="200.0" />
+                              <Separator layoutX="-4.0" layoutY="266.0" prefWidth="200.0" />
+                              <Label layoutX="13.0" layoutY="14.0" prefHeight="95.0" prefWidth="167.0" text="Para cada questão, selecionar a imagem no botão Imagem 1, caso necessário preencher o campo, e clicar no botão da questão!" wrapText="true" />
+                              <Separator layoutX="-3.0" layoutY="109.0" prefHeight="21.0" prefWidth="200.0" />
+                              <Label fx:id="resultadoProva1Questao3" layoutX="17.0" layoutY="303.0" prefHeight="51.0" prefWidth="160.0" text="Aguarde um momento, pode demorar alguns segundos!" wrapText="true" />
                            </children>
                         </AnchorPane>
                      </content>
@@ -215,7 +233,7 @@
                      <content>
                         <AnchorPane onMouseMoved="#rasterImg" prefHeight="565.0" prefWidth="331.0">
                            <children>
-                              <ImageView fx:id="imageView1" fitHeight="674.0" fitWidth="280.0" layoutX="25.0" layoutY="14.0" onMouseClicked="#alterarVerificarRGB" onMouseMoved="#rasterImg" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="-224.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-40.0" AnchorPane.topAnchor="0.0" />
+                              <ImageView fx:id="imageView1" fitHeight="674.0" fitWidth="280.0" layoutX="25.0" layoutY="14.0" onMouseMoved="#rasterImg" onMousePressed="#pressed" onMouseReleased="#released" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="-224.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-40.0" AnchorPane.topAnchor="0.0" />
                            </children>
                         </AnchorPane>
                      </content>

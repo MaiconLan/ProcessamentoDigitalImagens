@@ -1,6 +1,7 @@
 package controller;
 
 import core.ImageProcess;
+import core.Prova1;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -40,6 +41,9 @@ public class Controller {
     private ImageView imageView2;
 
     @FXML
+    private Label resultadoProva1Questao3;
+
+    @FXML
     private ImageView imageView3;
 
     @FXML
@@ -64,6 +68,9 @@ public class Controller {
     private TextField bPercentual;
 
     @FXML
+    private TextField colunas;
+
+    @FXML
     private Slider slider;
 
     @FXML
@@ -84,6 +91,23 @@ public class Controller {
 
     private boolean verificarRGB = true;
 
+    @FXML
+    public void prova1Questao1() throws IOException {
+        image3 = Prova1.questao1(image1, Integer.valueOf(colunas.getText()));
+        atualizaImage3(image3);
+    }
+
+    @FXML
+    public void prova1Questao2() throws IOException {
+        image3 = Prova1.questao2(image1);
+        atualizaImage3(image3);
+    }
+
+    @FXML
+    public void prova1Questao3() throws IOException, InterruptedException {
+        String resultado = Prova1.questao3(image1);
+        resultadoProva1Questao3.setText(resultado);
+    }
 
     @FXML
     public void histograma() throws IOException {
@@ -143,8 +167,8 @@ public class Controller {
     }
 
     @FXML
-    public void prova1(){
-        image3 = ImageProcess.prova1(image1, Integer.valueOf(distancia.getText()));
+    public void atividade1(){
+        image3 = ImageProcess.atividade1(image1, Integer.valueOf(distancia.getText()));
         atualizaImage3(image3);
     }
 
@@ -211,6 +235,34 @@ public class Controller {
             imageView2.setImage(image2);
             imageView2.setFitWidth(image2.getWidth());
             imageView2.setFitHeight(image2.getHeight());
+        }
+    }
+
+    @FXML
+    public void pressed(MouseEvent event) {
+        if (event.getTarget() instanceof ImageView) {
+            ImageView imageView = (ImageView) event.getTarget();
+            Image image = imageView.getImage();
+
+            if (image != null) {
+                int x = (int) event.getX();
+                int y = (int) event.getY();
+                Prova1.pressed(image, x, y);
+            }
+        }
+    }
+
+    @FXML
+    public void released(MouseEvent event) {
+        if (event.getTarget() instanceof ImageView) {
+            ImageView imageView = (ImageView) event.getTarget();
+            Image image = imageView.getImage();
+
+            if (image != null) {
+                int x = (int) event.getX();
+                int y = (int) event.getY();
+                Prova1.released(image, x, y);
+            }
         }
     }
 

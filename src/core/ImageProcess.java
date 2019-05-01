@@ -1,8 +1,6 @@
 package core;
 
 import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
@@ -109,7 +107,7 @@ public class ImageProcess {
         aritmetica(0, 0, w, h, pr, pw);
     }
 
-    private static void aritmetica(int inicioW, int inicioH, int w, int h, PixelReader pr, PixelWriter pw) {
+    public static void aritmetica(int inicioW, int inicioH, int w, int h, PixelReader pr, PixelWriter pw) {
         for (int i = inicioW; i < w; i++) {
             for (int j = inicioH; j < h; j++) {
                 Color corA = pr.getColor(i, j);
@@ -140,7 +138,7 @@ public class ImageProcess {
         }
     }
 
-    private static void manter(int inicioW, int inicioH, int w, int h, PixelReader pr, PixelWriter pw) {
+    public static void manter(int inicioW, int inicioH, int w, int h, PixelReader pr, PixelWriter pw) {
         for (int i = inicioW; i < w; i++) {
             for (int j = inicioH; j < h; j++) {
                 Color corA = pr.getColor(i, j);
@@ -265,6 +263,13 @@ public class ImageProcess {
         vizinhanca.add(new Pixel(cor3 != null ? cor3.getRed() : null, cor3 != null ? cor3.getGreen() : null, cor3 != null ? cor3.getBlue() : null, x - 1, y));
         vizinhanca.add(new Pixel(cor4 != null ? cor4.getRed() : null, cor4 != null ? cor4.getGreen() : null, cor4 != null ? cor4.getBlue() : null, x + 1, y));
 
+        return vizinhanca;
+    }
+
+    public static List<Pixel> vizinhanca(PixelReader pr, int x, int y) {
+        List<Pixel> vizinhanca = new ArrayList<>();
+        vizinhanca.addAll(vizinhanca_c(pr, x, y));
+        vizinhanca.addAll(vizinhanca_x(pr, x, y));
         return vizinhanca;
     }
 
@@ -415,7 +420,7 @@ public class ImageProcess {
         return histograma;
     }
 
-    public static Image prova1(Image imagem, int distancia) {
+    public static Image atividade1(Image imagem, int distancia) {
         int w = (int) imagem.getWidth();
         int h = (int) imagem.getHeight();
         PixelReader pr = imagem.getPixelReader();
@@ -437,4 +442,6 @@ public class ImageProcess {
 
         return wi;
     }
+
+
 }
