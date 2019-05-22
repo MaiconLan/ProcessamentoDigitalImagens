@@ -214,6 +214,16 @@
                         </AnchorPane>
                      </content>
                   </TitledPane>
+                  <TitledPane animated="false" prefHeight="260.0" prefWidth="184.0" text="Morfologia">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="182.0">
+                           <children>
+                              <Button layoutX="56.0" layoutY="52.0" mnemonicParsing="false" onAction="#erosao" text="Erosão" />
+                              <Button layoutX="49.0" layoutY="105.0" mnemonicParsing="false" onAction="#dilatacao" text="Dilatação" />
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </TitledPane>
                </panes>
             </Accordion>
          </children>

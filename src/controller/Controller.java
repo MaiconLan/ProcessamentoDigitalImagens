@@ -1,6 +1,7 @@
 package controller;
 
 import core.ImageProcess;
+import core.OpenCVUtils;
 import core.Prova1;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -26,8 +27,11 @@ import model.ActionMedia;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class Controller {
 
@@ -92,20 +96,36 @@ public class Controller {
     private boolean verificarRGB = true;
 
     @FXML
+    public void erosao(){
+        String path = image1.impl_getUrl();
+        String resultado = OpenCVUtils.erosao(path);
+        File file = new File(resultado);
+        atualizaImage3(new Image(file.toURI().toString()));
+    }
+
+    @FXML
+    public void dilatacao(){
+        String path = image1.impl_getUrl();
+        String resultado = OpenCVUtils.dilatacao(path);
+        File file = new File(resultado);
+        atualizaImage3(new Image(file.toURI().toString()));
+    }
+
+    @FXML
     public void prova1Questao1() throws IOException {
         image3 = Prova1.questao1(image1, Integer.valueOf(colunas.getText()));
         atualizaImage3(image3);
     }
 
     @FXML
-    public void prova1Questao2() throws IOException {
-        image3 = Prova1.questao2(image1);
+    public void prova1Questao2(MouseEvent event) throws IOException {
+        image3 = Prova1.questao2(image1, event);
         atualizaImage3(image3);
     }
 
     @FXML
     public void prova1Questao3() throws IOException, InterruptedException {
-        String resultado = Prova1.questao3(image1);
+        String resultado = Prova1.questao3V2(image1);
         resultadoProva1Questao3.setText(resultado);
     }
 
