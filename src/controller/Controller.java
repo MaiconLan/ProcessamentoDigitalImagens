@@ -111,6 +111,8 @@ public class Controller {
         atualizaImage3(new Image(file.toURI().toString()));
     }
 
+    //TESTE DE COMMIT
+
     @FXML
     public void prova1Questao1() throws IOException {
         image3 = Prova1.questao1(image1, Integer.valueOf(colunas.getText()));
