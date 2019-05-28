@@ -89,11 +89,20 @@ public class Controller {
     @FXML
     private Slider sliderPercentual;
 
+    @FXML
+    private Slider bordaThreshold;
+
     private Image image1, image2, image3;
 
     private File f;
 
     private boolean verificarRGB = true;
+
+    @FXML
+    public void canny(){
+        image3 = OpenCVUtils.canny(image1, bordaThreshold.getValue());
+        atualizaImage3(image3);
+    }
 
     @FXML
     public void erosao(){
@@ -118,13 +127,13 @@ public class Controller {
     }
 
     @FXML
-    public void prova1Questao2(MouseEvent event) throws IOException {
+    public void prova1Questao2(MouseEvent event) {
         image3 = Prova1.questao2(image1, event);
         atualizaImage3(image3);
     }
 
     @FXML
-    public void prova1Questao3() throws IOException, InterruptedException {
+    public void prova1Questao3() {
         String resultado = Prova1.questao3V2(image1);
         resultadoProva1Questao3.setText(resultado);
     }

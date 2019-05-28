@@ -224,6 +224,18 @@
                         </AnchorPane>
                      </content>
                   </TitledPane>
+                  <TitledPane animated="false" prefHeight="366.0" prefWidth="184.0" text="Bordinhas">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="278.0" prefWidth="182.0">
+                           <children>
+                              <Button layoutX="67.0" layoutY="61.0" mnemonicParsing="false" onAction="#canny" text="Canny" />
+                              <Label contentDisplay="CENTER" layoutX="14.0" layoutY="6.0" prefHeight="17.0" prefWidth="155.0" text="Canny" textAlignment="CENTER" />
+                              <Slider fx:id="bordaThreshold" layoutX="3.0" layoutY="23.0" prefHeight="38.0" prefWidth="177.0" showTickLabels="true" showTickMarks="true" />
+                              <Separator layoutY="96.0" prefHeight="14.0" prefWidth="200.0" />
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </TitledPane>
                </panes>
             </Accordion>
          </children>
