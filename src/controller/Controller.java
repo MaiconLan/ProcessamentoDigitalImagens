@@ -348,7 +348,7 @@ public class Controller {
 
     @FXML
     public void btnSalvar() {
-        if (image1 != null) {
+        if (image3 != null) {
             FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().add(
                     new FileChooser.ExtensionFilter("Imagem", "*.png"));
@@ -356,7 +356,7 @@ public class Controller {
                     File("D:\\PDI"));
             File file = fileChooser.showSaveDialog(null);
             if (file != null) {
-                BufferedImage bImg = SwingFXUtils.fromFXImage(image1, null);
+                BufferedImage bImg = SwingFXUtils.fromFXImage(image3, null);
                 try {
                     ImageIO.write(bImg, "PNG", file);
                 } catch (IOException e) {
