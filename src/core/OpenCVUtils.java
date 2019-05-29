@@ -42,7 +42,7 @@ public class OpenCVUtils {
 
         Mat destination = source;
 
-        Mat element = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new  Size(2*dilation_size + 1, 2*dilation_size+1));
+        Mat element = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(2 * dilation_size + 1, 2 * dilation_size + 1));
         Imgproc.dilate(source, destination, element);
         Imgcodecs.imwrite(RESULTADO, destination);
 
@@ -58,7 +58,7 @@ public class OpenCVUtils {
 
         Mat destination = source;
 
-        Mat element = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(2*erosion_size + 1, 2*erosion_size+1));
+        Mat element = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(2 * erosion_size + 1, 2 * erosion_size + 1));
         Imgproc.erode(source, destination, element);
         Imgcodecs.imwrite(RESULTADO, destination);
 
@@ -89,14 +89,40 @@ public class OpenCVUtils {
         int delta = 0;
         int ddepth = CvType.CV_16S;
 
-        Imgproc.GaussianBlur(origem, origem, new Size(3, 3), 0, 0, Core.BORDER_DEFAULT );
-        Imgproc.cvtColor(origem, cinza, Imgproc.COLOR_RGB2GRAY );
+        Imgproc.GaussianBlur(origem, origem, new Size(3, 3), 0, 0, Core.BORDER_DEFAULT);
+        Imgproc.cvtColor(origem, cinza, Imgproc.COLOR_RGB2GRAY);
 
-        Imgproc.Laplacian(cinza, destino, ddepth, kernelSize, scale, delta, Core.BORDER_DEFAULT );
+        Imgproc.Laplacian(cinza, destino, ddepth, kernelSize, scale, delta, Core.BORDER_DEFAULT);
 
         Core.convertScaleAbs(destino, resultado);
 
         return matrixToImage(resultado);
+    }
+
+    public static Image prewitt(Image imagem) {
+        Mat origem = imageToMat(imagem);
+        Mat destino = imageToMat(imagem);
+
+        int kernelSize = 3;
+        Mat kernel = new Mat(kernelSize, kernelSize, CvType.CV_32F) {
+            {
+                put(0, 0, -1);
+                put(0, 1, -1);
+                put(0, 2, -1);
+
+                put(1, 0, 0);
+                put(1, 1, 0);
+                put(1, 2, 0);
+
+                put(2, 0, 1);
+                put(2, 1, 1);
+                put(2, 2, 1);
+            }
+        };
+
+        Imgproc.filter2D(origem, destino, -1, kernel);
+
+        return matrixToImage(destino);
     }
 
     public static Mat imageToMat(Image image) {
@@ -113,7 +139,7 @@ public class OpenCVUtils {
         return mat;
     }
 
-    public static Image matrixToImage(Mat mat){
+    public static Image matrixToImage(Mat mat) {
         MatOfByte byteMat = new MatOfByte();
         Imgcodecs.imencode(".bmp", mat, byteMat);
         return new Image(new ByteArrayInputStream(byteMat.toArray()));

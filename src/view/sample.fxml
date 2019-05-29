@@ -235,6 +235,8 @@
                               <Button layoutX="63.0" layoutY="136.0" mnemonicParsing="false" onAction="#laplace" text="Laplace" />
                               <Label contentDisplay="CENTER" layoutX="14.0" layoutY="119.0" prefHeight="17.0" prefWidth="155.0" text="Laplace" textAlignment="CENTER" />
                               <Separator layoutX="10.0" layoutY="106.0" prefHeight="14.0" prefWidth="200.0" />
+                              <Button layoutX="63.0" layoutY="194.0" mnemonicParsing="false" onAction="#prewitt" text="Prewitt" />
+                              <Label contentDisplay="CENTER" layoutX="14.0" layoutY="177.0" prefHeight="17.0" prefWidth="155.0" text="Prewitt" textAlignment="CENTER" />
                            </children>
                         </AnchorPane>
                      </content>

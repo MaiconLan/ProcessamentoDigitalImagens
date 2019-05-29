@@ -99,6 +99,12 @@ public class Controller {
     private boolean verificarRGB = true;
 
     @FXML
+    public void prewitt(){
+        image3 = OpenCVUtils.prewitt(image1);
+        atualizaImage3(image3);
+    }
+
+    @FXML
     public void laplace(){
         image3 = OpenCVUtils.laplace(image1);
         atualizaImage3(image3);
