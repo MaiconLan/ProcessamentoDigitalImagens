@@ -66,20 +66,40 @@ public class OpenCVUtils {
     }
 
     public static Image canny(Image imagem, double bordaThreshold) {
-        Mat detectedEdges = imageToMat(imagem);
+        Mat origem = imageToMat(imagem);
         Mat destino = imageToMat(imagem);
-        Imgproc.cvtColor(detectedEdges, destino, Imgproc.COLOR_BGR2GRAY);
-        Imgproc.blur(destino, detectedEdges, new Size(3, 3));
-        Imgproc.Canny(detectedEdges, detectedEdges, bordaThreshold, bordaThreshold * 3, 3, false);
-        Core.add(detectedEdges, Scalar.all(0), destino);
+        Imgproc.cvtColor(origem, destino, Imgproc.COLOR_BGR2GRAY);
+        Imgproc.blur(destino, origem, new Size(3, 3));
+        Imgproc.Canny(origem, origem, bordaThreshold, bordaThreshold * 3, 3, false);
+        Core.add(origem, Scalar.all(0), destino);
 
-        destino.copyTo(detectedEdges, destino);
+        destino.copyTo(origem, destino);
 
         return matrixToImage(destino);
     }
 
+    public static Image laplace(Image imagem) {
+        Mat origem = imageToMat(imagem);
+        Mat cinza = imageToMat(imagem);
+        Mat destino = imageToMat(imagem);
+        Mat resultado = new Mat();
+
+        int kernelSize = 3;
+        int scale = 1;
+        int delta = 0;
+        int ddepth = CvType.CV_16S;
+
+        Imgproc.GaussianBlur(origem, origem, new Size(3, 3), 0, 0, Core.BORDER_DEFAULT );
+        Imgproc.cvtColor(origem, cinza, Imgproc.COLOR_RGB2GRAY );
+
+        Imgproc.Laplacian(cinza, destino, ddepth, kernelSize, scale, delta, Core.BORDER_DEFAULT );
+
+        Core.convertScaleAbs(destino, resultado);
+
+        return matrixToImage(resultado);
+    }
+
     public static Mat imageToMat(Image image) {
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         int width = (int) image.getWidth();
         int height = (int) image.getHeight();
         byte[] buffer = new byte[width * height * 4];

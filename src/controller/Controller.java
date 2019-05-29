@@ -90,7 +90,7 @@ public class Controller {
     private Slider sliderPercentual;
 
     @FXML
-    private Slider bordaThreshold;
+    private Slider thresholdCanny;
 
     private Image image1, image2, image3;
 
@@ -99,8 +99,14 @@ public class Controller {
     private boolean verificarRGB = true;
 
     @FXML
+    public void laplace(){
+        image3 = OpenCVUtils.laplace(image1);
+        atualizaImage3(image3);
+    }
+
+    @FXML
     public void canny(){
-        image3 = OpenCVUtils.canny(image1, bordaThreshold.getValue());
+        image3 = OpenCVUtils.canny(image1, thresholdCanny.getValue());
         atualizaImage3(image3);
     }
 
