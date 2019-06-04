@@ -263,6 +263,7 @@ public class Controller {
     }
 
     private void atualizaImage3(Image image){
+        image3 = image;
         imageView3.setImage(image);
         imageView3.setFitWidth(image.getWidth());
         imageView3.setFitHeight(image.getHeight());
