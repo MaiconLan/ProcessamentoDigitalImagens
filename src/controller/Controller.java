@@ -27,11 +27,8 @@ import model.ActionMedia;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class Controller {
 
@@ -113,6 +110,7 @@ public class Controller {
     @FXML
     public void canny(){
         image3 = OpenCVUtils.canny(image1, thresholdCanny.getValue());
+        System.out.println(thresholdCanny.getValue());
         atualizaImage3(image3);
     }
 
@@ -227,8 +225,8 @@ public class Controller {
     }
 
     @FXML
-    public void negativa(ActionEvent event){
-        image3 = ImageProcess.processarNegativo(image1);
+    public void negativa(){
+        image3 = ImageProcess.negativo(image1);
         atualizaImage3(image3);
     }
 
@@ -267,6 +265,13 @@ public class Controller {
         imageView3.setImage(image);
         imageView3.setFitWidth(image.getWidth());
         imageView3.setFitHeight(image.getHeight());
+    }
+
+    private void atualizaImage2(Image image){
+        image2 = image;
+        imageView2.setImage(image);
+        imageView2.setFitWidth(image.getWidth());
+        imageView2.setFitHeight(image.getHeight());
     }
 
     @FXML
@@ -352,14 +357,19 @@ public class Controller {
         if (image3 != null) {
             FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().add(
-                    new FileChooser.ExtensionFilter("Imagem", "*.png"));
+                    new FileChooser.ExtensionFilter("jpg", "*.jpg"));
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("png", "*.png")
+            );fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("jpeg", "*.jpeg")
+            );
             fileChooser.setInitialDirectory(new
-                    File("D:\\PDI"));
+                    File("C:\\Users\\maico\\Desktop"));
             File file = fileChooser.showSaveDialog(null);
             if (file != null) {
                 BufferedImage bImg = SwingFXUtils.fromFXImage(image3, null);
                 try {
-                    ImageIO.write(bImg, "PNG", file);
+                    ImageIO.write(bImg, "jpg", file);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -369,6 +379,26 @@ public class Controller {
                     "Não é possível salvar a imagem.",
                     "Não há nenhuma imagem modificada.",
                     Alert.AlertType.ERROR);
+        }
+    }
+
+    @FXML
+    public void salvar(){
+        if(image3 != null){
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Imagem", "*.png"));
+//			fileChooser.setInitialDirectory(new File("/Users/lucas/Documents/Unisul/02 - Processamento Digital de Imagens/img/save"));
+            File file = fileChooser.showSaveDialog(null);
+            if (file != null) {
+                BufferedImage bImg = SwingFXUtils.fromFXImage(image3, null);
+                try {
+                    ImageIO.write(bImg, "PNG", file);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }else{
+                exibeMsg("Salvar imagem.", "Não é possível salvar a imagem", "Não há nenhuma imagem modificada.", Alert.AlertType.ERROR);
+            }
         }
     }
 

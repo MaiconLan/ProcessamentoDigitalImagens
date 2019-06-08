@@ -310,7 +310,7 @@
    <bottom>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" onAction="#btnSalvar" text="Salvar" />
+            <Button mnemonicParsing="false" onAction="#salvar" text="Salvar" />
             <Button mnemonicParsing="false" onAction="#histograma" text="Histograma" />
             <VBox prefHeight="200.0" prefWidth="100.0" />
             <Label fx:id="lblR" text="R:" textFill="#bf1919">

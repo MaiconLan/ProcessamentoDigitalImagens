@@ -55,6 +55,8 @@ public class ImageProcess {
                 case MEDIA_PONDERADA:
                     ponderada(w, h, pr, pw, r, g, b);
                     break;
+                    default:
+                        break;
             }
 
             return wi;
@@ -69,8 +71,8 @@ public class ImageProcess {
     }
 
     private static void negativo(int inicioW, int inicioH, int w, int h, PixelReader pr, PixelWriter pw) {
-        for (int i = inicioW; i < w; i++) {
             for (int j = inicioH; j < h; j++) {
+        for (int i = inicioW; i < w; i++) {
                 Color corA = pr.getColor(i, j);
                 double red = 1 - corA.getRed();
                 double green = 1 - corA.getGreen();
@@ -79,6 +81,35 @@ public class ImageProcess {
                 Color novaCor = new Color(red, green, blue, corA.getOpacity());
                 pw.setColor(i, j, novaCor);
             }
+        }
+    }
+
+    public static Image negativo(Image imagem){
+        try {
+            int w = (int)imagem.getWidth();
+            int h = (int)imagem.getHeight();
+
+            PixelReader pr = imagem.getPixelReader();
+            WritableImage wi = new WritableImage(w,h);
+            PixelWriter pw = wi.getPixelWriter();
+
+            for (int i = 0; i < w; i++) {
+                for (int j = 0; j < h; j++) {
+                    Color prevColor = pr.getColor(i, j);
+
+                    double color1 = (1 - (prevColor.getRed()));
+                    double color2 = (1 - (prevColor.getGreen()));
+                    double color3 = (1 - (prevColor.getBlue()));
+
+                    Color newColor = new Color(color1, color2, color3, prevColor.getOpacity());
+                    pw.setColor(i, j, newColor);
+                }
+            }
+            return wi;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -321,6 +352,7 @@ public class ImageProcess {
         switch (acao) {
             case ADICAO:
                 adicao(minW, minH, pr1, pr2, percentual1, pw);
+                System.out.println(percentual1);
                 break;
             case SUBTRACAO:
                 subtracao(minW, minH, pr1, pr2, pw);
